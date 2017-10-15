@@ -1,10 +1,12 @@
 require 'date'
 
-require_relative '../db/sql_runner.rb'
-require_relative 'transaction_category.rb'
+require_relative '../db/sql_runner'
+require_relative 'transaction_category'
+require_relative 'merchant'
+require_relative 'user'
 
 class Transaction
-  attr_reader :id
+  attr_reader :id, :description, :merchant_id, :user_id, :budget_id, :amount, :transaction_time
 
   def initialize(options)
     @id = options['id'].to_i if options['id']
@@ -14,13 +16,12 @@ class Transaction
     @budget_id = options['budget_id'].to_i
     @amount = options['amount'].to_i
     @transaction_time = DateTime.strptime(options['transaction_time'],
-      '%d/%M/%Y %H:%M')
+      '%Y-%M-%d %H:%M:%S')
     @categories = options['categories']
   end
 
   def to_s
-    "ID: #{@id}, Description: #{@description} Merchant ID: #{@merchant_id}, User ID: #{@user_id},
-    Budget ID: #{@budget_id}, Amount: #{@amount} and Time: #{@transaction_time}."
+    "ID: #{@id}, Description: #{@description} Merchant ID: #{@merchant_id}, User ID: #{@user_id}, Budget ID: #{@budget_id}, Amount: #{@amount} and Time: #{@transaction_time}."
   end
 
   def save
@@ -62,5 +63,21 @@ class Transaction
 
   def self.find(id)
     Transaction.new(SQL.run('SELECT * FROM transactions WHERE id = $1;', [id])[0])
+  end
+
+  def self.list_all
+    find_all.map do |transaction|
+      info = "%s bought '%s' at %s for £%s on %s." % transaction.extract_print_info
+    end
+  end
+
+  def extract_print_info
+    time = @transaction_time.strftime("%A #{@transaction_time.day.ordinalize} %B, %R")
+    merchant =  Merchant.find(@merchant_id).name
+    user = User.find(@user_id).name
+    description = @description
+    price = @amount
+
+    [user, description, merchant, price, time]
   end
 end

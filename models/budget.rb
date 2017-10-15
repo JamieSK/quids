@@ -8,8 +8,8 @@ class Budget
   def initialize(options)
     @id = options['id'].to_i if options['id']
     @user_id = options['user_id'].to_i
-    @start_date = Date.strptime(options['start_date'], '%d/%m/%y')
-    @end_date = Date.strptime(options['end_date'], '%d/%m/%y')
+    @start_date = Date.strptime(options['start_date'], '%Y-%M-%d')
+    @end_date = Date.strptime(options['end_date'], '%Y-%M-%d')
     @cash_spent = options['cash_spent'].to_i
     @cash_max = options['cash_max'].to_i
   end
@@ -17,6 +17,10 @@ class Budget
   def to_s
     "ID: #{@id}, User id: #{@user_id}, Date: #{@start_date} - #{@end_date} and
     Cash: #{@cash_spent}/#{@cash_max}."
+  end
+
+  def spend_stats
+    "£#{@cash_spent}/#{@cash_max}"
   end
 
   def save
@@ -37,8 +41,13 @@ class Budget
 
   def check_spend
     sql = 'SELECT SUM(amount) FROM transactions WHERE budget_id = $1'
-    @cash_spent = SQL.run(sql, [@id])[0]['sum']
+    @cash_spent = SQL.run(sql, [@id])[0]['sum'].to_i
     update
+  end
+
+  def overbudget?
+    check_spend
+    @cash_spent > @cash_max
   end
 
   def delete

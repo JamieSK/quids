@@ -39,4 +39,9 @@ class Category
   def self.find(id)
     Category.new(SQL.run('SELECT * FROM categories WHERE id = $1;', [id])[0])
   end
+
+  def total
+    sql = 'SELECT SUM(transactions.amount) FROM transactions INNER JOIN transaction_categories ON transactions.id = transaction_categories.transaction_id WHERE transaction_categories.category_id = $1;'
+    SQL.run(sql, [@id])[0]['sum']
+  end
 end

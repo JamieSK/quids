@@ -20,8 +20,8 @@ jamie.save
 
 budget = Budget.new({
   'user_id' => jamie.id,
-  'start_date' => '01/01/2017',
-  'end_date' => '31/12/2017',
+  'start_date' => '2017-01-01',
+  'end_date' => '2017-12-31',
   'cash_spent' => 0,
   'cash_max' => 500
   })
@@ -60,7 +60,7 @@ pizza = Transaction.new({
   'user_id' => jamie.id,
   'budget_id' => budget.id,
   'amount' => 8,
-  'transaction_time' => '05/10/2017 20:39',
+  'transaction_time' => '2017-10-5 20:39:00',
   'categories' => [paesano.category_id]
   })
 pizza.save
@@ -71,7 +71,7 @@ groceries = Transaction.new({
   'user_id' => jamie.id,
   'budget_id' => budget.id,
   'amount' => 37,
-  'transaction_time' => '06/10/2017 22:30',
+  'transaction_time' => '2017-10-6 22:30:00',
   'categories' => [eating.id, shopping.id]
   })
 groceries.save
