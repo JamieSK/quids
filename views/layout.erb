@@ -20,20 +20,28 @@
       <%= yield %>
     </div>
     <div class="footer">
-      <ul>
-        <li class="dropdown">
-          <div class="dropdown-content">
-            <a href="#">Link 1</a>
-            <a href="#">Link 2</a>
-            <a href="#">Link 3</a>
-          </div>
-          <a href="#" class="dropbtn"><h3>Merchant</h3></a>
+      <ul class="nav">
+        <li>
+          <h3><a href="">Merchant</a></h3>
+          <ul>
+            <% Merchant.find_all.each do |merchant| %>
+              <li><a href="/merchant/<%= merchant.id %>"><%= merchant.name %></a></li>
+            <% end %>
+          </ul>
         </li>
         <li>
           <h3><a href="">Month</a></h3>
+          <ul>
+
+          </ul>
         </li>
         <li>
-          <h3><a href="/category/52">Category</a></h3>
+          <h3><a href="">Category</a></h3>
+          <ul>
+            <% Category.find_all.each do |category| %>
+              <li><a href="/category/<%= category.id %>"><%= category.name %></a></li>
+            <% end %>
+          </ul>
         </li>
         <li>
           <h3><a href="">Statistics</a></h3>

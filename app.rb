@@ -32,6 +32,14 @@ get '/category/:id' do
   erb :category
 end
 
+get '/merchant/:id' do
+  @overbudget = Budget.find_all.first.overbudget?
+  @budget_stats = Budget.find_all.first.spend_stats
+  @merchant = Merchant.find(params[:id]).name
+  @transactions = Merchant.find(params[:id]).list_all
+  erb :merchant
+end
+
 get '/delete/:id' do
   transaction = Transaction.find(params[:id])
   transaction.delete

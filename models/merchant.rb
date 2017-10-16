@@ -57,4 +57,12 @@ class Merchant
       return result[0]['id'].to_i
     end
   end
+
+  def list_all
+    sql = 'SELECT transactions.* FROM transactions WHERE merchant_id = $1;'
+    results = SQL.run(sql, [@id])
+    results.map do |transaction|
+      transaction = Transaction.new(transaction)
+    end
+  end
 end
