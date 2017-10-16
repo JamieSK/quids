@@ -8,9 +8,9 @@ require_relative 'models/ordinalize'
 
 # puts Transaction.list_all
 
-# puts Budget.find(8).spend_stats
+# puts Budget.find_all[0].spend_stats
 
-# puts Category.find(16).total
+# puts Category.find_all[1].total
 
 # puts "Before arrogant teapot purchase:", Budget.find(8).overbudget?, ''
 # Transaction.new({
@@ -22,6 +22,14 @@ require_relative 'models/ordinalize'
 #   'transaction_time' => '2017-10-5 08:14:00',
 #   'categories' => [15]
 #   }).save
-# puts 'After arrogant teapot purchase:', Budget.find(8).overbudget?
+# puts 'After arrogant teapot purchase:', Budget.find_all[0].overbudget?
 
 # Transaction.find(14).delete
+
+# p Category.find_all[1].list_all
+
+# p Transaction.find(56).list_category_names
+
+p 'Eating'.split(', ').map { |category|
+  Category.find_name(category)
+}

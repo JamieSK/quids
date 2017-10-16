@@ -32,6 +32,10 @@ class TransactionCategory
     SQL.run('DELETE FROM transaction_categories WHERE id = $1;', [@id])
   end
 
+  def self.delete_where_transaction(id)
+    SQL.run('DELETE FROM transaction_categories WHERE transaction_id = $1;', [id])
+  end
+
   def self.delete_all
     SQL.run('DELETE FROM transaction_categories;', [])
   end

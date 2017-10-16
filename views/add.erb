@@ -1,0 +1,34 @@
+<form action="/add" method="POST">
+  <label for="merchant">Merchant:</label>
+  <input type="text" name="merchant" id="merchant" />
+  <br>
+  <label for="description">Description:</label>
+  <input type="text" name="description" id="description" />
+  <br>
+  <label for="amount">Amount:</label>
+  <input type="number" name="amount" id="amount" />
+  <br>
+  <label for="date">Date:</label>
+  <input type="date" name="date" id="date" />
+  <br>
+  <label for="time">Time:</label>
+  <input type="time" name="time" id="time" />
+  <br>
+  <label for="category">Category:</label>
+  <input type="text" name="category" id="category" />
+  <br>
+  <input type="submit" value="Add">
+</form>
+
+
+
+
+  <!-- @id = options['id'].to_i if options['id']
+  @description = options['description']
+  @merchant_id = options['merchant_id'].to_i
+  @user_id = options['user_id'].to_i
+  @budget_id = options['budget_id'].to_i
+  @amount = options['amount'].to_i
+  @transaction_time = DateTime.strptime(options['transaction_time'],
+    '%Y-%M-%d %H:%M:%S')
+  @categories = options['categories'] -->

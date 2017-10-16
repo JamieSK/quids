@@ -43,4 +43,18 @@ class Merchant
   def self.find(id)
     Merchant.new(SQL.run('SELECT * FROM merchants WHERE id = $1;', [id])[0])
   end
+
+  def self.find_name(name)
+    results = SQL.run('SELECT * FROM merchants;', [])
+    result = results.select do |merchant|
+      merchant['name'].downcase == name.downcase
+    end
+    if result.first.nil?
+      new_merchant = Merchant.new({'name' => name})
+      new_merchant.save
+      return new_merchant.id
+    else
+      return result[0]['id'].to_i
+    end
+  end
 end

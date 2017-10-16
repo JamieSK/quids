@@ -4,9 +4,12 @@ require_relative '../db/sql_runner'
 require_relative 'transaction_category'
 require_relative 'merchant'
 require_relative 'user'
+require_relative 'budget'
+require_relative 'ordinalize'
+require_relative 'category'
 
 class Transaction
-  attr_reader :id, :description, :merchant_id, :user_id, :budget_id, :amount, :transaction_time
+  attr_reader :id, :description, :merchant_id, :user_id, :budget_id, :amount, :transaction_time, :categories
 
   def initialize(options)
     @id = options['id'].to_i if options['id']
@@ -30,7 +33,10 @@ class Transaction
     VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;'
     values = [@description, @merchant_id, @user_id, @budget_id, @amount, @transaction_time]
     @id = SQL.run(sql, values)[0]['id'].to_i
+    save_categories
+  end
 
+  def save_categories
     @categories.each do |category|
       TransactionCategory.new({
         'category_id' => category,
@@ -39,12 +45,28 @@ class Transaction
     end
   end
 
+  def self.options_from_form(options)
+    options['merchant_id'] = Merchant.find_name(options['merchant'])
+    options['user_id'] = User.find_all.first.id
+    options['budget_id'] = Budget.find_all.first.id
+    options['categories'] = options['category'].split(', ').map { |category|
+      Category.find_name(category)
+    }
+    options['transaction_time'] = "#{options['date']} #{options['time']}:00"
+    options
+  end
+
   def update
     sql = 'UPDATE transactions SET
     (description, merchant_id, user_id, budget_id, amount, transaction_time)
     = ($1, $2, $3, $4, $5, $6) WHERE id = $7;'
     values = [@description, @merchant_id, @user_id, @budget_id, @amount, @transaction_time, @id]
     SQL.run(sql, values)
+
+    # Delete transaction_categories for transaction.
+    TransactionCategory.delete_where_transaction(@id)
+    # Re-add them for categories array.
+    save_categories
   end
 
   def delete
@@ -56,13 +78,36 @@ class Transaction
   end
 
   def self.find_all
-    SQL.run('SELECT * FROM transactions;', []).map do |transaction_hash|
+    SQL.run('SELECT * FROM transactions ORDER BY transaction_time;', []).map do |transaction_hash|
       Transaction.new(transaction_hash)
     end
   end
 
   def self.find(id)
     Transaction.new(SQL.run('SELECT * FROM transactions WHERE id = $1;', [id])[0])
+  end
+
+  def find_merchant
+    Merchant.find(@merchant_id)
+  end
+
+  def find_categories
+    sql = 'SELECT categories.* FROM transaction_categories INNER JOIN categories ON category_id = categories.id WHERE transaction_id = $1;'
+    categories = SQL.run(sql, [@id]).map do |category|
+      Category.new(category)
+    end
+  end
+
+  def list_category_names
+    out = find_categories.each_with_object('') do |category, out|
+      out << category.name << ', '
+    end
+    out[0...-2]
+    # Removes final comma.
+  end
+
+  def list
+    info = "%s bought '%s' at %s for £%s on %s." % extract_print_info
   end
 
   def self.list_all

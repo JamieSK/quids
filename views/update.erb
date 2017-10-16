@@ -1,0 +1,21 @@
+<form action="/update/<%= @transaction.id %>" method="POST">
+  <label for="merchant">Merchant:</label>
+  <input type="text" name="merchant" id="merchant" value="<%= @transaction.find_merchant.name %>"/>
+  <br>
+  <label for="description">Description:</label>
+  <input type="text" name="description" id="description" value="<%= @transaction.description %>"/>
+  <br>
+  <label for="amount">Amount:</label>
+  <input type="number" name="amount" id="amount" value="<%= @transaction.amount %>"/>
+  <br>
+  <label for="date">Date:</label>
+  <input type="date" name="date" id="date" value="<%= @transaction.transaction_time.strftime('%F') %>"/>
+  <br>
+  <label for="time">Time:</label>
+  <input type="time" name="time" id="time" value="<%= @transaction.transaction_time.strftime('%H:%M') %>"/>
+  <br>
+  <label for="category">Category:</label>
+  <input type="text" name="category" id="category" value="<%= @transaction.list_category_names %>"/>
+  <br>
+  <input type="submit" value="Update">
+</form>

@@ -1,7 +1,7 @@
 require_relative '../db/sql_runner.rb'
 
 class Category
-  attr_reader :id
+  attr_reader :id, :name
 
   def initialize(options)
     @id = options['id'].to_i if options['id']
@@ -43,5 +43,27 @@ class Category
   def total
     sql = 'SELECT SUM(transactions.amount) FROM transactions INNER JOIN transaction_categories ON transactions.id = transaction_categories.transaction_id WHERE transaction_categories.category_id = $1;'
     SQL.run(sql, [@id])[0]['sum']
+  end
+
+  def self.find_name(name)
+    results = SQL.run('SELECT * FROM categories;', [])
+    result = results.select do |category|
+      category['name'].downcase == name.downcase
+    end
+    if result.first.nil?
+      new_category = Category.new({'name' => name})
+      new_category.save
+      return new_category.id
+    else
+      return result[0]['id'].to_i
+    end
+  end
+
+  def list_all
+    sql = 'SELECT transactions.* FROM transactions INNER JOIN transaction_categories ON transactions.id = transaction_id WHERE category_id = $1;'
+    results = SQL.run(sql, [@id])
+    results.map do |transaction|
+      transaction = Transaction.new(transaction)
+    end
   end
 end

@@ -20,7 +20,7 @@ class Budget
   end
 
   def spend_stats
-    "£#{@cash_spent}/#{@cash_max}"
+    "#{@cash_spent}/#{@cash_max}"
   end
 
   def save
