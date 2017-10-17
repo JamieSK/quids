@@ -12,41 +12,41 @@
 <body>
   <div class="container">
     <div class="header">
-      <a href="/"><h2>Quids</h2></a>
-      <% @font_red = " style='color:red;' " if @overbudget%>
-      <%= "<h2 class='budget_stats'#{@font_red}>£ #{@budget_stats} </h2>" %>
+      <a href="/index/0"><h2>Quids</h2></a>
+      <% @font_red = " style='color:red;' " if @budget.overbudget?%>
+      <% budget_total_form = "<form action='/budget' method='POST'>
+        <input class='budget_form'#{@font_red} type='text' name='budget' id='budget' size='5' pattern='\\d+' value='#{@budget.cash_max}'/></form>" %>
+      <%= "<h2 class='budget_stats'#{@font_red}>£ #{@budget.cash_spent}/</h2>#{budget_total_form}" %>
     </div>
     <div class="page">
-      <%= yield %>
+      <div class="left_page"><%= yield_content :left_page %></div>
+      <div class="right_page"><%= yield_content :right_page %></div>
     </div>
     <div class="footer">
       <ul class="nav">
         <li>
-          <h3><a href="">Merchant</a></h3>
+          <h3>Merchant</h3>
           <ul>
             <% Merchant.find_all.each do |merchant| %>
-              <li><a href="/merchant/<%= merchant.id %>"><%= merchant.name %></a></li>
+              <li><a href="/merchant/<%= merchant.id %>/0"><%= merchant.name %></a></li>
             <% end %>
           </ul>
         </li>
         <li>
-          <h3><a href="">Month</a></h3>
+          <h3>Month</h3>
           <ul>
             <% Transaction.group_by_month(Transaction.find_all).keys.each do |month| %>
-              <li><a href="/month/<%= month %>"><%= DateTime.strptime(month, '%Y-%m').strftime("%b '%y") %></a></li>
+              <li><a href="/month/<%= month %>/0"><%= DateTime.strptime(month, '%Y-%m').strftime("%b '%y") %></a></li>
             <% end %>
           </ul>
         </li>
         <li>
-          <h3><a href="">Category</a></h3>
+          <h3>Category</h3>
           <ul>
             <% Category.find_all.each do |category| %>
-              <li><a href="/category/<%= category.id %>"><%= category.name %></a></li>
+              <li><a href="/category/<%= category.id %>/0"><%= category.name %></a></li>
             <% end %>
           </ul>
-        </li>
-        <li>
-          <h3><a href="">Statistics</a></h3>
         </li>
       </ul>
       <a href="/add"><div class="circle"><h1>+</h1></div></a>

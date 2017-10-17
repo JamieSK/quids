@@ -25,6 +25,13 @@ html {
     text-decoration: none;
 }
 
+.nav h3 {
+    display: block;
+    padding: 15px;
+    color: #94ECBE;
+    text-decoration: none;
+}
+
 .nav a:hover {
     color: #1E3F20;
     background-color: #94ECBE;
@@ -61,11 +68,6 @@ html {
     color: #94ECBE;
 }
 
-.budget_stats {
-  margin-left: auto;
-  margin-right: 40px;
-}
-
 .container {
   display: flex;
   flex-direction: column;
@@ -83,6 +85,7 @@ html {
   font-family: 'Great Vibes', cursive;
   width: 100%;
   padding-left: 20px;
+  box-sizing: border-box;
 }
 
 .footer {
@@ -95,10 +98,12 @@ html {
   font-family: 'Great Vibes', cursive;
   width: 100%;
   padding-left: 10px;
+  box-sizing: border-box;
 }
 
 .circle {
   background-color: #94ECBE;
+  border: thin solid white;
   border-radius: 50%;
   display: flex;
   height: 60px;
@@ -120,17 +125,82 @@ a {
   text-decoration: none;
 }
 
+input {
+  border: thin solid black;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  margin-left: 10px;
+  padding: 3px;
+}
+
 .circle h1 {
   color: #000;
   font-family: 'Open Sans', sans-serif;
 }
 
 .page {
+  display: flex;
   flex: 1;
   font-family: 'Open Sans', sans-serif;
   line-height: 2.5;
   overflow: auto;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.left_page {
   padding: 5%;
+  box-sizing: border-box;
+  width: 80%;
+}
+
+.right_page {
+  padding: 5%;
+  box-sizing: border-box;
+  width: 80%;
+}
+
+.transaction_info {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.price_tag {
+}
+
+@media all and (min-width: 960px) {
+  .page {
+    overflow: auto;
+    flex-direction: row;
+  }
+
+  .left_page {
+    width: 50%;
+  }
+
+  .right_page {
+    width: 50%;
+  }
+
+  .footer {
+    order: -1;
+  }
+
+  .header {
+    order: 1;
+  }
+
+  .nav ul {
+      bottom: auto;
+  }
+
+  .circle {
+    bottom: auto;
+    top: 25px;
+  }
 }
 
 .tag_icon {
@@ -140,4 +210,29 @@ a {
   height: 15px;
   width: 15px;
   margin-right: 5px;
+}
+
+.budget_form {
+  display: inline;
+  background-color: transparent;
+  color: inherit;
+  border: none;
+  margin: 0;
+  margin-right: 5vw;
+  font-family: inherit;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.budget_form:focus {
+  outline: none;
+}
+
+.header h2 {
+  margin: 0;
+  margin-left: auto;
+}
+
+.bar_chart {
+  height: 10px;
 }

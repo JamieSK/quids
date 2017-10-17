@@ -1,17 +1,64 @@
-<% @transactions.keys.each do |day| %>
-  <h3><%= @transactions[day][0].print_day %></h3>
-  <% @transactions[day].each do |transaction| %>
-    <% if transaction.find_categories.first.nil? %>
-    <% bgcolour = "#FFF" %>
-    <% else %>
-    <% bgcolour = "#{Category.colours[transaction.find_categories.first.name]}"%>
+<% content_for :left_page do %>
+  <% @transactions.keys.each do |day| %>
+    <h3><%= @transactions[day][0].print_day %></h3>
+    <% @transactions[day].each do |transaction| %>
+      <% if transaction.find_categories.first.nil? %>
+      <% bgcolour = "#FFF" %>
+      <% else %>
+      <% bgcolour = "#{Category.colours[transaction.find_categories.first.name]}"%>
+      <% end %>
+      <% path = request.path_info %>
+      <% slash = path.rindex('/') %>
+      <% path = path[0..slash] %>
+      <a href="<%= path + transaction.id.to_s %>">
+        <div class="transaction_info">
+          <span>
+          <%= "<div class='tag_icon' style='background-color:#{bgcolour}'></div>" %>
+          <%= transaction.find_merchant.name %></span>
+          <%= "<span class='price_tag'>£#{transaction.amount}</span>" %>
+        </div>
+      </a>
+      <br />
     <% end %>
-    <%= "<div class='tag_icon' style='background-color:#{bgcolour}'></div>" %>
-    <%= transaction.list %>
-    <%= "<a href='/update/#{transaction.id}'>" %>
-    <img src='/images/update.png' class='modify_icon' /></a>
-    <%= "<a href='/delete/#{transaction.id}'>" %>
-    <img src='/images/delete.png' class='modify_icon' /></a>
-    <br />
+  <% end %>
+<% end %>
+
+<% content_for :right_page do %>
+  <% unless @transaction.nil? %>
+    <div class="transaction_info">
+      <h2><%= @transaction.find_merchant.name %></h2>
+      <h2>£<%= @transaction.amount %></h2>
+    </div>
+    <div class="transaction_info">
+      <h3><%= @transaction.description %></h3>
+      <h3>
+        <% if @transaction.find_categories.first %>
+          <%= @transaction.find_categories.first.name %>
+        <% end %>
+      </h3>
+    </div>
+    <div class="transaction_info">
+      <h4><%= @transaction.time %></h4>
+      <% if @transaction.find_categories.first.nil? %>
+        <% bgcolour = "#FFF" %>
+      <% else %>
+        <% bgcolour = "#{Category.colours[@transaction.find_categories.first.name]}"%>
+      <% end %>
+      <%= "<div class='tag_icon' style='background-color:#{bgcolour}'></div>" %>
+    </div>
+    <div class="transaction_info">
+      <span></span>
+      <span>
+        <%= "<a href='/update/#{@transaction.id}'>" %>
+        <img src='/images/update.png' class='modify_icon' /></a>
+        <%= "<a href='/delete/#{@transaction.id}'>" %>
+        <img src='/images/delete.png' class='modify_icon' /></a>
+      </span>
+    </div>
+    <h4>Percentage of Category</h4>
+    <% percentage = ((@transaction.amount / @category.total.to_i) * 100) %>
+    <div class="bar_chart" style="width: <%= percentage.to_s %>%; background-color: red; z-index: 1;"></div>
+    <div class="bar_chart" style="width: <%= (100 - percentage).to_s %>%; background-color: blue;">
+    </div>
   <% end %>
 <% end %>

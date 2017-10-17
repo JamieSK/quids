@@ -5,19 +5,25 @@ require 'date'
 require_relative 'models/transaction'
 require_relative 'models/budget'
 
-
+Transaction.delete_empties
 
 get '/' do
-  @overbudget = Budget.find_all.first.overbudget?
-  @budget_stats = Budget.find_all.first.spend_stats
+  redirect '/index/0'
+end
+
+get '/index/:transaction' do
+  @budget = Budget.find_all.first
   @transactions = Transaction.group_by_day(Transaction.find_all)
+  @transaction = Transaction.find(params[:transaction]) unless params[:transaction].to_i == 0
   erb :index
 end
 
 get '/add' do
-  @overbudget = Budget.find_all.first.overbudget?
-  @budget_stats = Budget.find_all.first.spend_stats
-  erb :add
+  @budget = Budget.find_all.first
+  @transactions = Transaction.group_by_day(Transaction.find_all)
+  erb :add, :layout => :layout do
+    erb :index
+  end
 end
 
 post '/add' do
@@ -25,21 +31,21 @@ post '/add' do
   redirect '/'
 end
 
-get '/category/:id' do
-  @overbudget = Budget.find_all.first.overbudget?
-  @budget_stats = Budget.find_all.first.spend_stats
-  @category = Category.find(params[:id]).name
+get '/category/:id/:transaction' do
+  @budget = Budget.find_all.first
+  @category = Category.find(params[:id])
   @transactions = Transaction.group_by_day(Category.find(params[:id]).list_all)
+  @transaction = Transaction.find(params[:transaction]) unless params[:transaction].to_i == 0
   erb :category, :layout => :layout do
     erb :index
   end
 end
 
-get '/merchant/:id' do
-  @overbudget = Budget.find_all.first.overbudget?
-  @budget_stats = Budget.find_all.first.spend_stats
+get '/merchant/:id/:transaction' do
+  @budget = Budget.find_all.first
   @merchant = Merchant.find(params[:id]).name
   @transactions = Transaction.group_by_day(Merchant.find(params[:id]).list_all)
+  @transaction = Transaction.find(params[:transaction]) unless params[:transaction].to_i == 0
   erb :merchant, :layout => :layout do
     erb :index
   end
@@ -52,10 +58,12 @@ get '/delete/:id' do
 end
 
 get '/update/:id' do
-  @overbudget = Budget.find_all.first.overbudget?
-  @budget_stats = Budget.find_all.first.spend_stats
+  @budget = Budget.find_all.first
+  @transactions = Transaction.group_by_day(Transaction.find_all)
   @transaction = Transaction.find(params[:id])
-  erb :update
+  erb :update, :layout => :layout do
+    erb :index
+  end
 end
 
 post '/update/:id' do
@@ -64,13 +72,24 @@ post '/update/:id' do
   redirect '/'
 end
 
-get '/month/:month' do
-  @overbudget = Budget.find_all.first.overbudget?
-  @budget_stats = Budget.find_all.first.spend_stats
+get '/month/:month/:transaction' do
+  @budget = Budget.find_all.first
   @month = params[:month]
   @transactions = Transaction.group_by_month(Transaction.find_all)[@month]
   @transactions = Transaction.group_by_day(@transactions)
+  @transaction = Transaction.find(params[:transaction]) unless params[:transaction].to_i == 0
   erb :month, :layout => :layout do
     erb :index
   end
+end
+
+post '/budget' do
+  budget = Budget.find_all.first
+  budget.cash_max = params[:budget]
+  budget.update
+  redirect '/'
+end
+
+get '/:id' do
+  redirect "/index/#{params[:id]}"
 end

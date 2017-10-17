@@ -1,21 +1,29 @@
-<form action="/add" method="POST">
-  <label for="merchant">Merchant:</label>
-  <input type="text" name="merchant" id="merchant" />
-  <br>
-  <label for="description">Description:</label>
-  <input type="text" name="description" id="description" />
-  <br>
-  <label for="amount">Amount:</label>
-  <input type="number" name="amount" id="amount" />
-  <br>
-  <label for="date">Date:</label>
-  <input type="date" name="date" id="date" />
-  <br>
-  <label for="time">Time:</label>
-  <input type="time" name="time" id="time" />
-  <br>
-  <label for="category">Category:</label>
-  <input type="text" name="category" id="category" />
-  <br>
-  <input type="submit" value="Add">
-</form>
+<% content_for :left_page do %>
+ <%= yield %>
+<% end %>
+
+<% content_for :right_page do %>
+  <h2>Add</h2>
+
+  <form action="/add" method="POST">
+    <label for="merchant">Merchant:</label>
+    <input type="text" name="merchant" id="merchant" />
+    <br>
+    <label for="description">Description:</label>
+    <input type="text" name="description" id="description" />
+    <br>
+    <label for="amount">Amount:</label>
+    <input type="number" name="amount" id="amount" />
+    <br>
+    <label for="date">Date:</label>
+    <input type="date" name="date" id="date" />
+    <br>
+    <label for="time">Time:</label>
+    <input type="time" name="time" id="time" />
+    <br>
+    <label for="category">Category:</label>
+    <input type="text" name="category" id="category" />
+    <br>
+    <input type="submit" value="Add">
+  </form>
+<% end %>

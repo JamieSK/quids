@@ -40,4 +40,6 @@ require_relative 'models/ordinalize'
 # by_month.keys.each { |month_key| by_month[month_key] = Transaction.group_by_day(by_month[month_key]) }
 # p by_month
 
-p Category.colours
+# p Category.colours
+
+Category.find(56).delete_if_empty

@@ -1,2 +1,4 @@
-<h1><%= @merchant %></h1>
-<%= yield %>
+<% content_for :left_page do %>
+  <h1><%= @merchant %></h1>
+  <%= yield %>
+<% end %>

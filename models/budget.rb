@@ -3,7 +3,8 @@ require 'date'
 require_relative '../db/sql_runner.rb'
 
 class Budget
-  attr_reader :id
+  attr_reader :id, :cash_spent
+  attr_accessor :cash_max
 
   def initialize(options)
     @id = options['id'].to_i if options['id']

@@ -24,7 +24,7 @@ class Transaction
   end
 
   def to_s
-    "ID: #{@id}, Description: #{@description} Merchant ID: #{@merchant_id}, User ID: #{@user_id}, Budget ID: #{@budget_id}, Amount: #{@amount} and Time: #{@transaction_time}."
+    "ID: #{@id}, Description: #{@description}, Merchant ID: #{@merchant_id}, User ID: #{@user_id}, Budget ID: #{@budget_id}, Amount: #{@amount} and Time: #{@transaction_time}."
   end
 
   def save
@@ -79,6 +79,11 @@ class Transaction
     SQL.run('DELETE FROM transactions;', [])
   end
 
+  def self.delete_empties
+    Category.find_all.each { |category| category.delete_if_empty }
+    Merchant.find_all.each { |merchant| merchant.delete_if_empty }
+  end
+
   def self.find_all
     SQL.run('SELECT * FROM transactions ORDER BY transaction_time DESC;', []).map do |transaction_hash|
       Transaction.new(transaction_hash)
@@ -122,8 +127,11 @@ class Transaction
     @transaction_time.strftime("%A #{@transaction_time.day.ordinalize} %B")
   end
 
+  def time
+    @transaction_time.strftime("%A #{@transaction_time.day.ordinalize} %B, %R")
+  end
+
   def extract_print_info
-    time = @transaction_time.strftime("%A #{@transaction_time.day.ordinalize} %B, %R")
     merchant =  Merchant.find(@merchant_id).name
     user = User.find(@user_id).name
     description = @description

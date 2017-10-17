@@ -1,2 +1,7 @@
-<h1><%= @category %></h1>
-<%= yield %>
+<% content_for :left_page do %>
+  <div class="transaction_info">
+    <h1><%= @category.name %></h1>
+    <h2>£<%= @category.total %></h2>
+  </div>
+  <%= yield %>
+<% end %>
