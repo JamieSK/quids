@@ -19,7 +19,7 @@ class Transaction
     @budget_id = options['budget_id'].to_i
     @amount = options['amount'].to_i
     @transaction_time = DateTime.strptime(options['transaction_time'],
-      '%Y-%M-%d %H:%M:%S')
+      '%Y-%m-%d %H:%M:%S')
     @categories = options['categories']
   end
 
@@ -71,6 +71,8 @@ class Transaction
 
   def delete
     SQL.run('DELETE FROM transactions WHERE id = $1;', [@id])
+    find_categories.each { |category| category.delete_if_empty }
+    Merchant.find(@merchant_id).delete_if_empty
   end
 
   def self.delete_all
@@ -78,7 +80,7 @@ class Transaction
   end
 
   def self.find_all
-    SQL.run('SELECT * FROM transactions ORDER BY transaction_time;', []).map do |transaction_hash|
+    SQL.run('SELECT * FROM transactions ORDER BY transaction_time DESC;', []).map do |transaction_hash|
       Transaction.new(transaction_hash)
     end
   end
@@ -124,5 +126,33 @@ class Transaction
     price = @amount
 
     [user, description, merchant, price, time]
+  end
+
+  def self.find_grouped_by_month
+    sql = "SELECT * FROM transactions GROUP BY date_part('year', transaction_time), date_part('month', transaction_time), id;"
+    results = SQL.run(sql, [])
+    results.each_with_object(hash = {}) do |transaction_hash|
+      transaction = Transaction.new(transaction_hash)
+      transaction_month = transaction.transaction_time.strftime('%Y-%m')
+      if hash.has_key?(transaction_month)
+        hash[transaction_month] << transaction
+      else
+        hash[transaction_month] = [transaction]
+      end
+    end
+  end
+
+  def self.find_grouped_by_day
+    sql = "SELECT * FROM transactions GROUP BY date_part('year', transaction_time), date_part('month', transaction_time), date_part('day', transaction_time), id;"
+    results = SQL.run(sql, [])
+    results.each_with_object(hash = {}) do |transaction_hash|
+      transaction = Transaction.new(transaction_hash)
+      transaction_day = transaction.transaction_time.strftime('%Y-%m-%d')
+      if hash.has_key?(transaction_day)
+        hash[transaction_day] << transaction
+      else
+        hash[transaction_day] = [transaction]
+      end
+    end
   end
 end

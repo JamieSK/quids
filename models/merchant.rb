@@ -34,6 +34,11 @@ class Merchant
     SQL.run('DELETE FROM merchants;', [])
   end
 
+  def delete_if_empty
+    count = SQL.run('SELECT COUNT(*) FROM transactions WHERE merchant_id = $1;', [@id])[0]['count'].to_i
+    delete if count < 1
+  end
+
   def self.find_all
     SQL.run('SELECT * FROM merchants;', []).map do |merchant_hash|
       Merchant.new(merchant_hash)

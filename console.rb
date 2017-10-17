@@ -30,6 +30,8 @@ require_relative 'models/ordinalize'
 
 # p Transaction.find(56).list_category_names
 
-p 'Eating'.split(', ').map { |category|
-  Category.find_name(category)
-}
+# p Transaction.find_grouped_by_month
+
+# p Category.find(54).delete_if_empty
+
+p Merchant.find_all.each { |m| m.delete_if_empty }

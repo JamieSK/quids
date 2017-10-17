@@ -30,6 +30,11 @@ class Category
     SQL.run('DELETE FROM categories;', [])
   end
 
+  def delete_if_empty
+    count = SQL.run('SELECT COUNT(*) FROM transaction_categories WHERE category_id = $1;', [@id])[0]['count'].to_i
+    delete if count < 1
+  end
+
   def self.find_all
     SQL.run('SELECT * FROM categories;', []).map do |category_hash|
       Category.new(category_hash)

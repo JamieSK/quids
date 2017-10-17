@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'sinatra/contrib/all'
+require 'date'
 
 require_relative 'models/transaction'
 require_relative 'models/budget'
@@ -57,4 +58,10 @@ post '/update/:id' do
   transaction = Transaction.new(Transaction.options_from_form(params))
   transaction.update
   redirect '/'
+end
+
+get '/month/:month' do
+  @month = params[:month]
+  @transactions = Transaction.find_grouped_by_month[params[:month]]
+  erb :month
 end
