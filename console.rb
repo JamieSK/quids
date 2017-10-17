@@ -34,4 +34,10 @@ require_relative 'models/ordinalize'
 
 # p Category.find(54).delete_if_empty
 
-p Merchant.find_all.each { |m| m.delete_if_empty }
+# p Merchant.find_all.each { |m| m.delete_if_empty }
+
+# by_month = Transaction.group_by_month(Transaction.find_all)
+# by_month.keys.each { |month_key| by_month[month_key] = Transaction.group_by_day(by_month[month_key]) }
+# p by_month
+
+p Category.colours

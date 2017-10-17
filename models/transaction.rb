@@ -109,13 +109,17 @@ class Transaction
   end
 
   def list
-    info = "%s bought '%s' at %s for £%s on %s." % extract_print_info
+    info = "'%s' at %s for £%s." % extract_print_info
   end
 
   def self.list_all
     find_all.map do |transaction|
-      info = "%s bought '%s' at %s for £%s on %s." % transaction.extract_print_info
+      info = "'%s' at %s for £%s." % transaction.extract_print_info
     end
+  end
+
+  def print_day
+    @transaction_time.strftime("%A #{@transaction_time.day.ordinalize} %B")
   end
 
   def extract_print_info
@@ -125,33 +129,27 @@ class Transaction
     description = @description
     price = @amount
 
-    [user, description, merchant, price, time]
+    [description, merchant, price]
   end
 
-  def self.find_grouped_by_month
-    sql = "SELECT * FROM transactions GROUP BY date_part('year', transaction_time), date_part('month', transaction_time), id;"
-    results = SQL.run(sql, [])
-    results.each_with_object(hash = {}) do |transaction_hash|
-      transaction = Transaction.new(transaction_hash)
-      transaction_month = transaction.transaction_time.strftime('%Y-%m')
-      if hash.has_key?(transaction_month)
-        hash[transaction_month] << transaction
-      else
-        hash[transaction_month] = [transaction]
-      end
-    end
-  end
-
-  def self.find_grouped_by_day
-    sql = "SELECT * FROM transactions GROUP BY date_part('year', transaction_time), date_part('month', transaction_time), date_part('day', transaction_time), id;"
-    results = SQL.run(sql, [])
-    results.each_with_object(hash = {}) do |transaction_hash|
-      transaction = Transaction.new(transaction_hash)
+  def self.group_by_day(results)
+    results.each_with_object(hash = {}) do |transaction|
       transaction_day = transaction.transaction_time.strftime('%Y-%m-%d')
       if hash.has_key?(transaction_day)
         hash[transaction_day] << transaction
       else
         hash[transaction_day] = [transaction]
+      end
+    end
+  end
+
+  def self.group_by_month(results)
+    results.each_with_object(hash = {}) do |transaction|
+      transaction_month = transaction.transaction_time.strftime('%Y-%m')
+      if hash.has_key?(transaction_month)
+        hash[transaction_month] << transaction
+      else
+        hash[transaction_month] = [transaction]
       end
     end
   end

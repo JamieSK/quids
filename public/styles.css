@@ -132,3 +132,12 @@ a {
   overflow: auto;
   padding: 5%;
 }
+
+.tag_icon {
+  border: thin solid black;
+  border-radius: 50%;
+  display: inline-block;
+  height: 15px;
+  width: 15px;
+  margin-right: 5px;
+}

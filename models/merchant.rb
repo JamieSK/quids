@@ -64,7 +64,7 @@ class Merchant
   end
 
   def list_all
-    sql = 'SELECT transactions.* FROM transactions WHERE merchant_id = $1;'
+    sql = 'SELECT transactions.* FROM transactions WHERE merchant_id = $1 ORDER BY transaction_time DESC;'
     results = SQL.run(sql, [@id])
     results.map do |transaction|
       transaction = Transaction.new(transaction)

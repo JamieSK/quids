@@ -1,9 +1,2 @@
 <h1><%= @category %></h1>
-<% @transactions.each do |transaction| %>
-  <%= transaction.list %>
-  <%= "<a href='/update/#{transaction.id}'>" %>
-  <img src='/images/update.png' class='modify_icon' /></a>
-  <%= "<a href='/delete/#{transaction.id}'>" %>
-  <img src='/images/delete.png' class='modify_icon' /></a>
-  <br />
-<% end %>
+<%= yield %>

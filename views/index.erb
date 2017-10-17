@@ -1,8 +1,17 @@
-<% @transactions.each do |transaction| %>
-  <%= transaction.list %>
-  <%= "<a href='/update/#{transaction.id}'>" %>
-  <img src='/images/update.png' class='modify_icon' /></a>
-  <%= "<a href='/delete/#{transaction.id}'>" %>
-  <img src='/images/delete.png' class='modify_icon' /></a>
-  <br />
+<% @transactions.keys.each do |day| %>
+  <h3><%= @transactions[day][0].print_day %></h3>
+  <% @transactions[day].each do |transaction| %>
+    <% if transaction.find_categories.first.nil? %>
+    <% bgcolour = "#FFF" %>
+    <% else %>
+    <% bgcolour = "#{Category.colours[transaction.find_categories.first.name]}"%>
+    <% end %>
+    <%= "<div class='tag_icon' style='background-color:#{bgcolour}'></div>" %>
+    <%= transaction.list %>
+    <%= "<a href='/update/#{transaction.id}'>" %>
+    <img src='/images/update.png' class='modify_icon' /></a>
+    <%= "<a href='/delete/#{transaction.id}'>" %>
+    <img src='/images/delete.png' class='modify_icon' /></a>
+    <br />
+  <% end %>
 <% end %>

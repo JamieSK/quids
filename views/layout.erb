@@ -32,7 +32,7 @@
         <li>
           <h3><a href="">Month</a></h3>
           <ul>
-            <% Transaction.find_grouped_by_month.keys.each do |month| %>
+            <% Transaction.group_by_month(Transaction.find_all).keys.each do |month| %>
               <li><a href="/month/<%= month %>"><%= DateTime.strptime(month, '%Y-%m').strftime("%b '%y") %></a></li>
             <% end %>
           </ul>

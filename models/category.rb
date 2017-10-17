@@ -65,10 +65,17 @@ class Category
   end
 
   def list_all
-    sql = 'SELECT transactions.* FROM transactions INNER JOIN transaction_categories ON transactions.id = transaction_id WHERE category_id = $1;'
+    sql = 'SELECT transactions.* FROM transactions INNER JOIN transaction_categories ON transactions.id = transaction_id WHERE category_id = $1 ORDER BY transaction_time DESC;'
     results = SQL.run(sql, [@id])
     results.map do |transaction|
       transaction = Transaction.new(transaction)
     end
+  end
+
+  def self.colours
+    categories = find_all
+    categories.map! { |category| category.name }
+    colours = %w[#e6194b #3cb44b #ffe119 #0082c8 #f58231 #911eb4 #46f0f0 #f032e6 #d2f53c #fabebe #008080 #e6beff #aa6e28 #fffac8 #800000 #aaffc3 #808000 #ffd8b1 #000080 #808080 #FFFFFF #000000]
+    categories.zip(colours).to_h
   end
 end

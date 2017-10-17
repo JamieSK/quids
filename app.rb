@@ -10,7 +10,7 @@ require_relative 'models/budget'
 get '/' do
   @overbudget = Budget.find_all.first.overbudget?
   @budget_stats = Budget.find_all.first.spend_stats
-  @transactions = Transaction.find_all
+  @transactions = Transaction.group_by_day(Transaction.find_all)
   erb :index
 end
 
@@ -29,16 +29,20 @@ get '/category/:id' do
   @overbudget = Budget.find_all.first.overbudget?
   @budget_stats = Budget.find_all.first.spend_stats
   @category = Category.find(params[:id]).name
-  @transactions = Category.find(params[:id]).list_all
-  erb :category
+  @transactions = Transaction.group_by_day(Category.find(params[:id]).list_all)
+  erb :category, :layout => :layout do
+    erb :index
+  end
 end
 
 get '/merchant/:id' do
   @overbudget = Budget.find_all.first.overbudget?
   @budget_stats = Budget.find_all.first.spend_stats
   @merchant = Merchant.find(params[:id]).name
-  @transactions = Merchant.find(params[:id]).list_all
-  erb :merchant
+  @transactions = Transaction.group_by_day(Merchant.find(params[:id]).list_all)
+  erb :merchant, :layout => :layout do
+    erb :index
+  end
 end
 
 get '/delete/:id' do
@@ -61,7 +65,12 @@ post '/update/:id' do
 end
 
 get '/month/:month' do
+  @overbudget = Budget.find_all.first.overbudget?
+  @budget_stats = Budget.find_all.first.spend_stats
   @month = params[:month]
-  @transactions = Transaction.find_grouped_by_month[params[:month]]
-  erb :month
+  @transactions = Transaction.group_by_month(Transaction.find_all)[@month]
+  @transactions = Transaction.group_by_day(@transactions)
+  erb :month, :layout => :layout do
+    erb :index
+  end
 end
