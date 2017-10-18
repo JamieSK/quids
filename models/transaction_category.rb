@@ -1,5 +1,6 @@
 require_relative '../db/sql_runner'
 
+# Models the join table of transactions to categories.
 class TransactionCategory
   attr_reader :id
 
@@ -33,7 +34,8 @@ class TransactionCategory
   end
 
   def self.delete_where_transaction(id)
-    SQL.run('DELETE FROM transaction_categories WHERE transaction_id = $1;', [id])
+    sql = 'DELETE FROM transaction_categories WHERE transaction_id = $1;'
+    SQL.run(sql, [id])
   end
 
   def self.delete_all
@@ -47,7 +49,8 @@ class TransactionCategory
   end
 
   def self.find(id)
-    result = SQL.run('SELECT * FROM transaction_categories WHERE id = $1;', [id])[0]
+    sql = 'SELECT * FROM transaction_categories WHERE id = $1;'
+    result = SQL.run(sql, [id])[0]
     TransactionCategory.new(result)
   end
 end

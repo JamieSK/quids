@@ -1,5 +1,6 @@
 require_relative '../db/sql_runner.rb'
 
+# Models a user for quids budgeting app.
 class User
   attr_reader :id
   attr_accessor :name
@@ -22,8 +23,7 @@ class User
 
   def update
     sql = 'UPDATE users SET (name, picture) = ($1, $2) WHERE id = $3;'
-    values = [@name, @picture, @id]
-    SQL.run(sql.values)
+    SQL.run(sql, [@name, @picture, @id])
   end
 
   def delete

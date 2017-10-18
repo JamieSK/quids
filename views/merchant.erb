@@ -1,4 +1,7 @@
 <% content_for :left_page do %>
-  <h1><%= @merchant %></h1>
+  <div class="transaction_info">
+    <h1><%= @merchant.name %></h1>
+    <h2>£<%= @merchant.total %></h2>
+  </div>
   <%= yield %>
 <% end %>

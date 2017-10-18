@@ -1,0 +1,29 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #FFF;
+  height: 100vh;
+}
+
+.page {
+  display: flex;
+  flex: 1;
+  font-family: 'Open Sans', sans-serif;
+  line-height: 2.5;
+  overflow: auto;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.left_page {
+  padding: 5%;
+  box-sizing: border-box;
+  width: 80%;
+}
+
+.right_page {
+  padding: 5%;
+  box-sizing: border-box;
+  width: 80%;
+}

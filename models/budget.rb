@@ -2,6 +2,7 @@ require 'date'
 
 require_relative '../db/sql_runner.rb'
 
+# Models budget for quids budgeting app.
 class Budget
   attr_reader :id, :cash_spent
   attr_accessor :cash_max

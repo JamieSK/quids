@@ -1,0 +1,55 @@
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+html {
+  background-color: #1E3F20;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+input {
+  border: thin solid black;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  margin-left: 10px;
+  padding: 3px;
+}
+
+.modify_icon {
+  width: 20px;
+}
+
+.transaction_info {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.tag_icon {
+  border: thin solid black;
+  border-radius: 50%;
+  display: inline-block;
+  height: 15px;
+  width: 15px;
+  margin-right: 5px;
+}
+
+.bar_chart {
+  border: thin solid black;
+  display: flex;
+}
+
+.bar {
+  display: inline-block;
+  height: 10px;
+  border: none;
+  margin: 0;
+}

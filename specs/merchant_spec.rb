@@ -8,6 +8,7 @@ require_relative '../models/transaction_category'
 require_relative '../models/user'
 require_relative '../models/budget'
 
+# Tests the merchant class for the quids budgeting app.
 class MerchantTest < MiniTest::Test
   def test_find_by_name
     assert_equal(78, Merchant.find_name('Tesco'))

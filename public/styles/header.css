@@ -1,0 +1,32 @@
+.header {
+  display: flex;
+  align-items: center;
+  background-color: #1E3F20;
+  height: 40px;
+  color: #94ECBE;
+  font-family: 'Great Vibes', cursive;
+  width: 100%;
+  padding-left: 25px;
+  box-sizing: border-box;
+}
+
+.header h2 {
+  margin: 0;
+  margin-left: auto;
+}
+
+.budget_form {
+  display: inline;
+  background-color: transparent;
+  color: inherit;
+  border: none;
+  margin: 0;
+  margin-right: 25px;
+  font-family: inherit;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.budget_form:focus {
+  outline: none;
+}

@@ -14,14 +14,16 @@ end
 get '/index/:transaction' do
   @budget = Budget.find_all.first
   @transactions = Transaction.group_by_day(Transaction.find_all)
-  @transaction = Transaction.find(params[:transaction]) unless params[:transaction].to_i == 0
+  unless params[:transaction].to_i.zero?
+    @transaction = Transaction.find(params[:transaction])
+  end
   erb :index
 end
 
 get '/add' do
   @budget = Budget.find_all.first
   @transactions = Transaction.group_by_day(Transaction.find_all)
-  erb :add, :layout => :layout do
+  erb :add, layout: :layout do
     erb :index
   end
 end
@@ -35,18 +37,22 @@ get '/category/:id/:transaction' do
   @budget = Budget.find_all.first
   @category = Category.find(params[:id])
   @transactions = Transaction.group_by_day(Category.find(params[:id]).list_all)
-  @transaction = Transaction.find(params[:transaction]) unless params[:transaction].to_i == 0
-  erb :category, :layout => :layout do
+  unless params[:transaction].to_i.zero?
+    @transaction = Transaction.find(params[:transaction])
+  end
+  erb :category, layout: :layout do
     erb :index
   end
 end
 
 get '/merchant/:id/:transaction' do
   @budget = Budget.find_all.first
-  @merchant = Merchant.find(params[:id]).name
+  @merchant = Merchant.find(params[:id])
   @transactions = Transaction.group_by_day(Merchant.find(params[:id]).list_all)
-  @transaction = Transaction.find(params[:transaction]) unless params[:transaction].to_i == 0
-  erb :merchant, :layout => :layout do
+  unless params[:transaction].to_i.zero?
+    @transaction = Transaction.find(params[:transaction])
+  end
+  erb :merchant, layout: :layout do
     erb :index
   end
 end
@@ -61,7 +67,7 @@ get '/update/:id' do
   @budget = Budget.find_all.first
   @transactions = Transaction.group_by_day(Transaction.find_all)
   @transaction = Transaction.find(params[:id])
-  erb :update, :layout => :layout do
+  erb :update, layout: :layout do
     erb :index
   end
 end
@@ -75,10 +81,13 @@ end
 get '/month/:month/:transaction' do
   @budget = Budget.find_all.first
   @month = params[:month]
+  @month_total = Transaction.total_by_month(@month[0, 4], @month[-2, 2])
   @transactions = Transaction.group_by_month(Transaction.find_all)[@month]
   @transactions = Transaction.group_by_day(@transactions)
-  @transaction = Transaction.find(params[:transaction]) unless params[:transaction].to_i == 0
-  erb :month, :layout => :layout do
+  unless params[:transaction].to_i.zero?
+    @transaction = Transaction.find(params[:transaction])
+  end
+  erb :month, layout: :layout do
     erb :index
   end
 end

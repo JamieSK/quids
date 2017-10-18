@@ -1,5 +1,6 @@
 require_relative '../db/sql_runner.rb'
 
+# Models mercchant class for merchants table for quids budgeting app.
 class Merchant
   attr_reader :id
   attr_accessor :category_id, :name
@@ -26,6 +27,11 @@ class Merchant
     SQL.run(sql, [@name, @category_id, @id])
   end
 
+  def total
+    sql = 'SELECT SUM(amount) FROM transactions WHERE merchant_id = $1;'
+    SQL.run(sql, [@id])[0]['sum']
+  end
+
   def delete
     SQL.run('DELETE FROM merchants WHERE id = $1;', [@id])
   end
@@ -35,7 +41,8 @@ class Merchant
   end
 
   def delete_if_empty
-    count = SQL.run('SELECT COUNT(*) FROM transactions WHERE merchant_id = $1;', [@id])[0]['count'].to_i
+    sql = 'SELECT COUNT(*) FROM transactions WHERE merchant_id = $1;'
+    count = SQL.run(sql, [@id])[0]['count'].to_i
     delete if count < 1
   end
 
@@ -52,22 +59,20 @@ class Merchant
   def self.find_name(name)
     results = SQL.run('SELECT * FROM merchants;', [])
     result = results.select do |merchant|
-      merchant['name'].downcase == name.downcase
+      merchant['name'].casecmp(name)
     end
-    if result.first.nil?
-      new_merchant = Merchant.new({'name' => name})
-      new_merchant.save
-      return new_merchant.id
-    else
-      return result[0]['id'].to_i
-    end
+    return result[0]['id'].to_i if result.first.nil?
+    new_merchant = Merchant.new('name' => name)
+    new_merchant.save
+    new_merchant.id
   end
 
   def list_all
-    sql = 'SELECT transactions.* FROM transactions WHERE merchant_id = $1 ORDER BY transaction_time DESC;'
+    sql = 'SELECT transactions.* FROM transactions WHERE merchant_id = $1
+      ORDER BY transaction_time DESC;'
     results = SQL.run(sql, [@id])
     results.map do |transaction|
-      transaction = Transaction.new(transaction)
+      Transaction.new(transaction)
     end
   end
 end

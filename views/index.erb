@@ -1,3 +1,7 @@
+<% Transaction.delete_empties %>
+<% if @category.nil? && !@transaction.nil? %>
+  <% @category = @transaction.find_categories[0] %>
+<% end %>
 <% content_for :left_page do %>
   <% @transactions.keys.each do |day| %>
     <h3><%= @transactions[day][0].print_day %></h3>
@@ -7,14 +11,12 @@
       <% else %>
       <% bgcolour = "#{Category.colours[transaction.find_categories.first.name]}"%>
       <% end %>
-      <% path = request.path_info %>
-      <% slash = path.rindex('/') %>
-      <% path = path[0..slash] %>
+      <!-- Finds path up to final slash, thus removing the transaction id. -->
+      <% path = request.path_info[0..request.path_info.rindex('/')] %>
       <a href="<%= path + transaction.id.to_s %>">
         <div class="transaction_info">
           <span>
-          <%= "<div class='tag_icon' style='background-color:#{bgcolour}'></div>" %>
-          <%= transaction.find_merchant.name %></span>
+          <%= "<div class='tag_icon' style='background-color:#{bgcolour}'></div>" + transaction.find_merchant.name %></span>
           <%= "<span class='price_tag'>£#{transaction.amount}</span>" %>
         </div>
       </a>
@@ -55,10 +57,18 @@
         <img src='/images/delete.png' class='modify_icon' /></a>
       </span>
     </div>
-    <h4>Percentage of Category</h4>
-    <% percentage = ((@transaction.amount / @category.total.to_i) * 100) %>
-    <div class="bar_chart" style="width: <%= percentage.to_s %>%; background-color: red; z-index: 1;"></div>
-    <div class="bar_chart" style="width: <%= (100 - percentage).to_s %>%; background-color: blue;">
-    </div>
+    <% unless @category.nil? %>
+      <h4>Out of Category</h4>
+      <div class="transaction_info">
+        <h5>£<%= @transaction.amount%></h5>
+        <h5>£<%= @category.total %></h5>
+      </div>
+      <% percentage = ((@transaction.amount.to_f / @category.total.to_i) * 100) %>
+      <div class="bar_chart">
+        <div class="bar" style="width: <%= percentage.to_s %>%; background-color: #94ECBE;"></div>
+        <div class="bar" style="width: <%= (100 - percentage).to_s %>%; background-color: #1E3F20;">
+        </div>
+      </div>
+    <% end %>
   <% end %>
 <% end %>

@@ -8,6 +8,7 @@ require_relative '../models/transaction_category'
 require_relative '../models/user'
 require_relative '../models/budget'
 
+# Tests the category class for the quids budgeting app.
 class CategoryTest < MiniTest::Test
   def test_find_by_name
     assert_equal(51, Category.find_name('Shopping'))

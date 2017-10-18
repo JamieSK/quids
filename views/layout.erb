@@ -5,7 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link href="https://fonts.googleapis.com/css?family=Great+Vibes|Open+Sans" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="/styles.css">
+  <link rel="stylesheet" type="text/css" href="/styles/others.css">
+  <link rel="stylesheet" type="text/css" href="/styles/layout.css">
+  <link rel="stylesheet" type="text/css" href="/styles/header.css">
+  <link rel="stylesheet" type="text/css" href="/styles/footer.css">
+  <link rel="stylesheet" type="text/css" href="/styles/navbar.css">
+  <link rel="stylesheet" type="text/css" href="/styles/responsive.css">
   <link rel="icon" href="/images/favicon.png" />
   <title>Quids in!</title>
 </head>
@@ -14,9 +19,10 @@
     <div class="header">
       <a href="/index/0"><h2>Quids</h2></a>
       <% @font_red = " style='color:red;' " if @budget.overbudget?%>
-      <% budget_total_form = "<form action='/budget' method='POST'>
-        <input class='budget_form'#{@font_red} type='text' name='budget' id='budget' size='5' pattern='\\d+' value='#{@budget.cash_max}'/></form>" %>
-      <%= "<h2 class='budget_stats'#{@font_red}>£ #{@budget.cash_spent}/</h2>#{budget_total_form}" %>
+      <h2 class='budget_stats'<%= @font_red %>>£ <%= @budget.cash_spent %>/ </h2>
+      <form action='/budget' method='POST'>
+        <input class='budget_form' type='text' name='budget' id='budget' size='5' pattern='\d+' value='<%= @budget.cash_max %>' <%= @font_red %> />
+      </form>
     </div>
     <div class="page">
       <div class="left_page"><%= yield_content :left_page %></div>

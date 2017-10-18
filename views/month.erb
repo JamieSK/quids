@@ -1,4 +1,7 @@
 <% content_for :left_page do %>
-  <h1><%= DateTime.strptime(@month, '%Y-%m').strftime("%b '%y") %></h1>
+  <div class="transaction_info">
+    <h1><%= DateTime.strptime(@month, '%Y-%m').strftime("%b '%y") %></h1>
+    <h2>£<%= @month_total %></h2>
+  </div>
   <%= yield %>
 <% end %>

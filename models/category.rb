@@ -1,5 +1,6 @@
 require_relative '../db/sql_runner.rb'
 
+# Models the category table for quids budgeting app.
 class Category
   attr_reader :id, :name
 
@@ -31,7 +32,8 @@ class Category
   end
 
   def delete_if_empty
-    count = SQL.run('SELECT COUNT(*) FROM transaction_categories WHERE category_id = $1;', [@id])[0]['count'].to_i
+    sql = 'SELECT COUNT(*) FROM transaction_categories WHERE category_id = $1;'
+    count = SQL.run(sql, [@id])[0]['count'].to_i
     delete if count < 1
   end
 
@@ -46,36 +48,40 @@ class Category
   end
 
   def total
-    sql = 'SELECT SUM(transactions.amount) FROM transactions INNER JOIN transaction_categories ON transactions.id = transaction_categories.transaction_id WHERE transaction_categories.category_id = $1;'
+    sql = 'SELECT SUM(transactions.amount) FROM transactions INNER JOIN
+     transaction_categories ON transactions.id =
+     transaction_categories.transaction_id WHERE
+     transaction_categories.category_id = $1;'
     SQL.run(sql, [@id])[0]['sum']
   end
 
   def self.find_name(name)
-    results = SQL.run('SELECT * FROM categories;', [])
-    result = results.select do |category|
-      category['name'].downcase == name.downcase
+    result = SQL.run('SELECT * FROM categories;', []).select do |category|
+      category['name'].casecmp(name)
     end
-    if result.first.nil?
-      new_category = Category.new({'name' => name})
-      new_category.save
-      return new_category.id
-    else
-      return result[0]['id'].to_i
-    end
+    return result[0]['id'].to_i if result.first.nil?
+    new_category = Category.new('name' => name)
+    new_category.save
+    new_category.id
   end
 
   def list_all
-    sql = 'SELECT transactions.* FROM transactions INNER JOIN transaction_categories ON transactions.id = transaction_id WHERE category_id = $1 ORDER BY transaction_time DESC;'
+    sql = 'SELECT transactions.* FROM transactions INNER JOIN
+     transaction_categories ON transactions.id = transaction_id WHERE
+     category_id = $1 ORDER BY transaction_time DESC;'
     results = SQL.run(sql, [@id])
     results.map do |transaction|
-      transaction = Transaction.new(transaction)
+      Transaction.new(transaction)
     end
   end
 
   def self.colours
     categories = find_all
-    categories.map! { |category| category.name }
-    colours = %w[#e6194b #3cb44b #ffe119 #0082c8 #f58231 #911eb4 #46f0f0 #f032e6 #d2f53c #fabebe #008080 #e6beff #aa6e28 #fffac8 #800000 #aaffc3 #808000 #ffd8b1 #000080 #808080 #FFFFFF #000000]
+    categories.map!(&:name)
+    colours = %w[#e6194b #3cb44b #ffe119 #0082c8 #f58231 #911eb4 #46f0f0
+                  #f032e6 #d2f53c #fabebe #008080 #e6beff #aa6e28 #fffac8
+                  #800000 #aaffc3 #808000 #ffd8b1 #000080 #808080 #FFFFFF
+                  #000000]
     categories.zip(colours).to_h
   end
 end

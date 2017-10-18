@@ -8,6 +8,7 @@ require_relative '../models/transaction_category'
 require_relative '../models/user'
 require_relative '../models/budget'
 
+# Tests the budget class for the quids budgeting app.
 class BudgetTest < MiniTest::Test
   # def setup
   #   Category.delete_all
