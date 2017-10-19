@@ -59,11 +59,11 @@ class Category
     result = SQL.run('SELECT * FROM categories;', []).select do |category|
       category['name'].casecmp(name)
     end
-    return result[0]['id'].to_i if result.first.nil?
-    new_category = Category.new('name' => name)
+    return result[0]['id'].to_i unless result.first.nil?
+    new_category = Category.new({'name' => name})
     new_category.save
     new_category.id
-  end
+    end
 
   def list_all
     sql = 'SELECT transactions.* FROM transactions INNER JOIN

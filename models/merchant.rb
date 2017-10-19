@@ -57,14 +57,13 @@ class Merchant
   end
 
   def self.find_name(name)
-    results = SQL.run('SELECT * FROM merchants;', [])
-    result = results.select do |merchant|
+    result = SQL.run('SELECT * FROM merchants;', []).select do |merchant|
       merchant['name'].casecmp(name)
     end
-    return result[0]['id'].to_i if result.first.nil?
-    new_merchant = Merchant.new('name' => name)
+    return result[0]['id'].to_i unless result.first.nil?
+    new_merchant = Merchant.new({'name' => name})
     new_merchant.save
-    new_merchant.id
+    return new_merchant.id
   end
 
   def list_all
