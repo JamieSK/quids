@@ -43,4 +43,8 @@ class User
   def self.find(id)
     User.new(SQL.run('SELECT * FROM users WHERE id = $1;', [id])[0])
   end
+
+  def ==(other_user)
+    self.id == other_user.id
+  end
 end

@@ -1,0 +1,6 @@
+1 - Separate controllers file into many controller files;
+2 - Views in folders, tidy like.
+
+Testing a database and its functions:
+
+  class TestDB

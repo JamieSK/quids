@@ -10,8 +10,8 @@ class Budget
   def initialize(options)
     @id = options['id'].to_i if options['id']
     @user_id = options['user_id'].to_i
-    @start_date = Date.strptime(options['start_date'], '%Y-%M-%d')
-    @end_date = Date.strptime(options['end_date'], '%Y-%M-%d')
+    @start_date = Date.strptime(options['start_date'], '%Y-%m-%d')
+    @end_date = Date.strptime(options['end_date'], '%Y-%m-%d')
     @cash_spent = options['cash_spent'].to_i
     @cash_max = options['cash_max'].to_i
   end

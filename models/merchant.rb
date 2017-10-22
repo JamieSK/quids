@@ -1,6 +1,6 @@
 require_relative '../db/sql_runner.rb'
 
-# Models mercchant class for merchants table for quids budgeting app.
+# Models merchant class for merchants table for quids budgeting app.
 class Merchant
   attr_reader :id
   attr_accessor :category_id, :name
@@ -58,7 +58,7 @@ class Merchant
 
   def self.find_name(name)
     result = SQL.run('SELECT * FROM merchants;', []).select do |merchant|
-      merchant['name'].casecmp(name)
+      merchant['name'].casecmp?(name)
     end
     return result[0]['id'].to_i unless result.first.nil?
     new_merchant = Merchant.new({'name' => name})

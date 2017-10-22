@@ -1,24 +1,32 @@
 require 'minitest/autorun'
 require 'minitest/rg'
 
-require_relative '../models/category'
 require_relative '../models/merchant'
-require_relative '../models/transaction'
-require_relative '../models/transaction_category'
-require_relative '../models/user'
-require_relative '../models/budget'
 
 # Tests the merchant class for the quids budgeting app.
 class MerchantTest < MiniTest::Test
-  def test_find_by_name
-    assert_equal(78, Merchant.find_name('Tesco'))
+  def setup
+    @test_merchant = Merchant.new('name' => 'test')
+    @test_merchant.save
   end
 
-  def test_not_found_by_name
-    assert_nil(Merchant.find_name('Harrods'))
+  def test_find_by_name
+    assert_equal(@test_merchant.id, Merchant.find_name('Test'))
+  end
+
+  def test_not_found_by_name_adds_merchant
+    num_merchants = Merchant.find_all.length
+    assert_instance_of(Integer, Merchant.find_name('Harrods'))
+    assert_equal(num_merchants + 1, Merchant.find_all.length)
   end
 
   def test_find_wrong_case
-    assert_equal(78, Merchant.find_name('tesco'))
+    assert_equal(@test_merchant.id, Merchant.find_name('test'))
+  end
+
+  def teardown
+    Merchant.find(Merchant.find_name('Harrods')).delete
+    @test_merchant.delete
+    skipped?
   end
 end

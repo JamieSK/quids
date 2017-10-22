@@ -1,15 +1,13 @@
 require 'minitest/autorun'
 require 'minitest/rg'
 
-require_relative '../models/category'
-require_relative '../models/merchant'
 require_relative '../models/transaction'
-require_relative '../models/transaction_category'
+require_relative '../models/merchant'
 require_relative '../models/user'
 require_relative '../models/budget'
 
-# Tests the budget class for the quids budgeting app.
-class BudgetTest < MiniTest::Test
+# Tests transaction class
+class TransactionTest < MiniTest::Test
   def setup
     @test_user = User.new('name' => 'test mcTesting')
     @test_user.save
@@ -30,27 +28,11 @@ class BudgetTest < MiniTest::Test
       'merchant_id' => @test_merchant.id,
       'user_id' => @test_user.id,
       'budget_id' => @test_budget.id,
-      'amount' => 200,
+      'amount' => 42,
       'transaction_time' => '2017-10-22 15:18:00',
-      'categories' => [@test_category.id]
+      'categories' => [@test_category.name]
     )
-  end
-
-  def test_spend_stats
-    assert_equal("0/100", @test_budget.spend_stats)
-  end
-
-  def test_overspend_budget_check
-    # Refute that one is overbudget.
-    refute(@test_budget.overbudget?)
-
-    # Buy something extortionate.
     @test_transaction.save
-
-    # Assert that one is now overbudget.
-    assert(@test_budget.overbudget?)
-    # Shouldn't have bought that teapot.
-    # HTTP 418.
   end
 
   def teardown

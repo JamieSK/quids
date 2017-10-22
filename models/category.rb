@@ -57,14 +57,14 @@ class Category
 
   def self.find_name(name)
     result = SQL.run('SELECT * FROM categories;', []).select do |category|
-      category['name'].casecmp(name)
+      category['name'].casecmp?(name)
     end
     return result[0]['id'].to_i unless result.first.nil?
     new_category = Category.new({'name' => name})
     new_category.save
     new_category.id
-    end
-
+  end
+  
   def list_all
     sql = 'SELECT transactions.* FROM transactions INNER JOIN
      transaction_categories ON transactions.id = transaction_id WHERE
