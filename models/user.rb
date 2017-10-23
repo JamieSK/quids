@@ -3,7 +3,7 @@ require_relative '../db/sql_runner.rb'
 # Models a user for quids budgeting app.
 class User
   attr_reader :id
-  attr_accessor :name
+  attr_accessor :name, :picture
 
   def initialize(options)
     @id = options['id'].to_i if options['id']
@@ -44,7 +44,9 @@ class User
     User.new(SQL.run('SELECT * FROM users WHERE id = $1;', [id])[0])
   end
 
-  def ==(other_user)
-    self.id == other_user.id
+  def ==(other)
+    self.instance_variables.all? do |var|
+      self.instance_variable_get(var) == other.instance_variable_get(var)
+    end
   end
 end
